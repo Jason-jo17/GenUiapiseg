@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  genui-api-explorer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: genui-api-explorer
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL:-postgresql://genui:genui_pass@postgres:5432/genui_db}
+      - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
+      - GENUI_VAULT_PASSPHRASE=${GENUI_VAULT_PASSPHRASE}
+      - GENUI_LLM_PROVIDER=${GENUI_LLM_PROVIDER:-google}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: genui-postgres
+    restart: unless-stopped
+    ports:
+      - "15432:5432"
+    environment:
+      - POSTGRES_USER=genui
+      - POSTGRES_PASSWORD=genui_pass
+      - POSTGRES_DB=genui_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
