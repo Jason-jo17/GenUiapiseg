@@ -6,17 +6,17 @@
 Instead of traditional text-only chat interfaces, Gen UI utilizes **Structured Generative UI Tool Calling**. When a user requests API information, tests an endpoint, or manages API keys, the AI model invokes strongly-typed Zod tools. These tool responses are automatically dispatched through a deterministic **Component Registry**, rendering interactive, stateful React widgets (cards, forms, data tables, key vaults, setup guides) directly into the conversational feed.
 
 ```mermaid
-graph TD
-    User([User]) <--> ChatOverlay[Chat Overlay / Canvas UI]
-    ChatOverlay <--> NextApiChat[/api/chat Route Handler]
-    NextApiChat <--> VercelAISDK[Vercel AI SDK v4]
-    VercelAISDK <--> LLM[Anthropic / OpenAI / Gemini LLM]
-    VercelAISDK -- Tool Invocation --> ZodTools[Zod Tool Schemas & Executors]
-    ZodTools -- Structured Result --> CompRegistry[Component Registry]
-    CompRegistry -- Interactive Widget --> ChatOverlay
-    ChatOverlay <--> ProxyAPI[/api/proxy Server-side API Proxy]
-    ProxyAPI <--> TargetAPIs[External Public APIs]
-    ProxyAPI <--> KeyVault[(Encrypted API Key Vault / Postgres)]
+flowchart TD
+    User(["Developer / User"]) <-->|"Ctrl+Shift+Space"| ChatOverlay["Chat Overlay / Canvas UI"]
+    ChatOverlay <-->|"Streaming SSE"| NextApiChat["/api/chat Route Handler"]
+    NextApiChat <--> VercelAISDK["Vercel AI SDK v4"]
+    VercelAISDK <--> LLM["Anthropic / OpenAI / Gemini LLM"]
+    VercelAISDK -->|"Tool Invocation"| ZodTools["Zod Tool Schemas & Executors"]
+    ZodTools -->|"Structured Result"| CompRegistry["Deterministic Component Registry"]
+    CompRegistry -->|"Interactive Widget"| ChatOverlay
+    ChatOverlay <-->|"Live API Requests"| ProxyAPI["/api/proxy Server-side API Proxy"]
+    ProxyAPI <--> TargetAPIs["External Public APIs"]
+    ProxyAPI <-->|"AES-256-GCM"| KeyVault[("Encrypted API Key Vault / Postgres")]
 ```
 
 ---

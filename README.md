@@ -33,18 +33,18 @@ Traditional API portals force developers to juggle static documentation, curl co
 ## 🏛 Architecture
 
 ```mermaid
-graph TD
-    User([Developer / User]) <-->|Ctrl+Shift+Space| ChatOverlay[Chat Overlay / Canvas UI]
-    ChatOverlay <-->|Streaming SSE| NextApiChat[/api/chat Route Handler]
-    NextApiChat <--> VercelAISDK[Vercel AI SDK v4]
-    VercelAISDK <--> LLM[Google Gemini / Anthropic Claude / OpenAI]
-    VercelAISDK -- Structured Tool Calls --> ZodTools[Zod Tool Definitions]
-    ZodTools -- Tool Execution Result --> CompRegistry[Deterministic Component Registry]
-    CompRegistry -- Interactive React Widgets --> ChatOverlay
-    ChatOverlay <-->|Live API Requests| ProxyAPI[/api/proxy Server-side CORS Proxy]
-    ProxyAPI <--> TargetAPIs[External Public APIs]
-    ProxyAPI <-->|AES-256-GCM| KeyVault[(Encrypted Key Vault / PostgreSQL)]
-    ChatOverlay <-->|Persist Panels| Dashboard[(Pinned Dashboard State)]
+flowchart TD
+    User(["Developer / User"]) <-->|"Ctrl+Shift+Space"| ChatOverlay["Chat Overlay / Canvas UI"]
+    ChatOverlay <-->|"Streaming SSE"| NextApiChat["/api/chat Route Handler"]
+    NextApiChat <--> VercelAISDK["Vercel AI SDK v4"]
+    VercelAISDK <--> LLM["Google Gemini / Anthropic Claude / OpenAI"]
+    VercelAISDK -->|"Structured Tool Calls"| ZodTools["Zod Tool Definitions"]
+    ZodTools -->|"Tool Execution Result"| CompRegistry["Deterministic Component Registry"]
+    CompRegistry -->|"Interactive React Widgets"| ChatOverlay
+    ChatOverlay <-->|"Live API Requests"| ProxyAPI["/api/proxy Server-side CORS Proxy"]
+    ProxyAPI <--> TargetAPIs["External Public APIs"]
+    ProxyAPI <-->|"AES-256-GCM"| KeyVault[("Encrypted Key Vault / PostgreSQL")]
+    ChatOverlay -->|"Persist Panels"| Dashboard[("Pinned Dashboard State")]
 ```
 
 ---
